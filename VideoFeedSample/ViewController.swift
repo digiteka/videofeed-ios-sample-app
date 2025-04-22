@@ -23,6 +23,7 @@ class ViewController: UIViewController {
         case view
         case swiftui
         case videofeed
+        case playerVideo
     }
 
 
@@ -43,7 +44,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,13 +53,24 @@ extension ViewController: UITableViewDataSource {
                 return carrousselData.count
             case 1:
                 return videoFeedData.count
+            case 2:
+                return 1
             default:
                 return 0
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "Carroussel" : "VideoFeed"
+        switch section {
+            case 0:
+                return "Carroussel"
+            case 1:
+                return "VideoFeed"
+            case 2:
+                return "Player"
+            default:
+                return ""
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -67,7 +79,15 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let option = indexPath.section == 0 ? carrousselData[indexPath.row] : videoFeedData[indexPath.row]
+        var option: OptionsType!
+        switch indexPath.section {
+            case 0:
+                option = carrousselData[indexPath.row]
+            case 1:
+                option = videoFeedData[indexPath.row]
+            default:
+                option = .playerVideo
+        }
         switch option {
             case .tableview:
                 cell.textLabel?.text = "Tableview"
@@ -79,6 +99,10 @@ extension ViewController: UITableViewDataSource {
                 cell.textLabel?.text = "SwiftUI"
             case .videofeed:
                 cell.textLabel?.text = "VideoFeed"
+            case .playerVideo:
+                cell.textLabel?.text = "Player Video"
+            case .none:
+                cell.textLabel?.text = ""
         }
         return cell
     }
@@ -86,8 +110,15 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let option = indexPath.section == 0 ? carrousselData[indexPath.row] : videoFeedData[indexPath.row]
-
+        var option: OptionsType!
+        switch indexPath.section {
+            case 0:
+                option = carrousselData[indexPath.row]
+            case 1:
+                option = videoFeedData[indexPath.row]
+            default:
+                option = .playerVideo
+        }
         var mdtk = self.defaultMdtk
 
         if mdtkTextfield.text != nil && mdtkTextfield.text != "" {
@@ -108,6 +139,10 @@ extension ViewController: UITableViewDelegate {
                 }
             case .videofeed:
                 navigationController?.pushViewController(VideoFeedViewController(mdtk: mdtk), animated: true)
+            case .playerVideo:
+                navigationController?.pushViewController(VideoWebviewViewController(mdtk: mdtk), animated: true)
+            case .none:
+                print("none")
         }
     }
 }

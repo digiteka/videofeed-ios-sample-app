@@ -158,6 +158,43 @@ If no videoId is provided, it will display the first video of the feed.
 
 
 
+# Open the VideoFeed from a digiteka web player
+
+Configure your webview containing the digiteka player to listen to js post message event
+
+```swift
+    let contentController = WKUserContentController()
+    contentController.add(self, name: "iOSjsHandler")
+    let config = WKWebViewConfiguration()
+    config.userContentController = contentController
+    let webview = WKWebView(frame: self.webContainer.bounds, configuration: config)
+```
+
+add in the html the script to listen and dispatch to your ios code
+
+```js
+<script>
+    window.addEventListener('message', function(e) {
+        window.webkit.messageHandlers.iOSjsHandler.postMessage(e.data);
+    });
+</script>
+```
+
+add the `WKScriptMessageHandler` protocol and catch the `trigger_vf_chromeless-{VIDEO_ID}` as follow:
+
+```swift
+extension VideoWebviewViewController : WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let messageBody = message.body as? String else { return }
+
+        if messageBody.contains("trigger_vf_chromeless") {
+            let id = messageBody.replacingOccurrences(of: "trigger_vf_chromeless", with: "")
+            let controller = VideoFeedViewController(videoId: id, mdtk: mdtk)
+            self.present(controller, animated: true, completion: nil)
+        }
+    }
+}
+```
 
 # Compatibility
 
