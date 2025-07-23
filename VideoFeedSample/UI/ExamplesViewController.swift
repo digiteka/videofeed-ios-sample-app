@@ -1,15 +1,16 @@
 //
-//  ViewController.swift
+//  ExamplesViewController.swift
 //  VideoFeedSample
 //
-//  Created by Anthony Dudouit on 25/11/2024.
+//  Created by Anthony Dudouit on 16/04/2025.
 //
 
 import UIKit
 import SwiftUI
 import VideoFeedSDK
 
-class ViewController: UIViewController {
+class ExamplesViewController: UIViewController {
+
 
     @IBOutlet weak var tableview: UITableView!
 
@@ -23,6 +24,7 @@ class ViewController: UIViewController {
         case view
         case swiftui
         case videofeed
+        case playerVideo
     }
 
 
@@ -35,15 +37,18 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         tableview.delegate = self
         tableview.dataSource = self
+        
+        // Set up text field delegate
+        mdtkTextfield.delegate = self
 
         self.title = "VideoFeed Sample"
 
     }
 }
 
-extension ViewController: UITableViewDataSource {
+extension ExamplesViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,13 +57,24 @@ extension ViewController: UITableViewDataSource {
                 return carrousselData.count
             case 1:
                 return videoFeedData.count
+            case 2:
+                return 1
             default:
                 return 0
         }
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "Carroussel" : "VideoFeed"
+        switch section {
+            case 0:
+                return "Carroussel"
+            case 1:
+                return "VideoFeed"
+            case 2:
+                return "Player"
+            default:
+                return ""
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -67,7 +83,15 @@ extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
-        let option = indexPath.section == 0 ? carrousselData[indexPath.row] : videoFeedData[indexPath.row]
+        var option: OptionsType!
+        switch indexPath.section {
+            case 0:
+                option = carrousselData[indexPath.row]
+            case 1:
+                option = videoFeedData[indexPath.row]
+            default:
+                option = .playerVideo
+        }
         switch option {
             case .tableview:
                 cell.textLabel?.text = "Tableview"
@@ -79,15 +103,26 @@ extension ViewController: UITableViewDataSource {
                 cell.textLabel?.text = "SwiftUI"
             case .videofeed:
                 cell.textLabel?.text = "VideoFeed"
+            case .playerVideo:
+                cell.textLabel?.text = "Player Video"
+            case .none:
+                cell.textLabel?.text = ""
         }
         return cell
     }
 }
 
-extension ViewController: UITableViewDelegate {
+extension ExamplesViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let option = indexPath.section == 0 ? carrousselData[indexPath.row] : videoFeedData[indexPath.row]
-
+        var option: OptionsType!
+        switch indexPath.section {
+            case 0:
+                option = carrousselData[indexPath.row]
+            case 1:
+                option = videoFeedData[indexPath.row]
+            default:
+                option = .playerVideo
+        }
         var mdtk = self.defaultMdtk
 
         if mdtkTextfield.text != nil && mdtkTextfield.text != "" {
@@ -107,7 +142,33 @@ extension ViewController: UITableViewDelegate {
                     navigationController?.pushViewController(vc, animated: true)
                 }
             case .videofeed:
-                navigationController?.pushViewController(VideoFeedViewController(mdtk: mdtk), animated: true)
+                navigationController?.pushViewController(
+                    VideoFeedViewController(
+                        mdtk: mdtk,
+                        showCloseButton: true,
+                        delegate: self
+                    ),
+                    animated: true
+                )
+            case .playerVideo:
+                navigationController?.pushViewController(VideoWebviewViewController(mdtk: mdtk), animated: true)
+            case .none:
+                print("none")
         }
     }
 }
+
+extension ExamplesViewController: VideoFeedDelegate {
+    func handleExternalLink(url: URL) {
+        print("External link tapped: \(url)")
+        // Handle external link
+    }
+}
+
+extension ExamplesViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}
+

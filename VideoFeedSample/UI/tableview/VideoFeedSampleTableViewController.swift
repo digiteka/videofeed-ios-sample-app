@@ -59,7 +59,7 @@ extension VideoFeedSampleTableViewController: UITableViewDataSource {
         switch data[indexPath.row] {
             case .carroussel:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
-                cell.load(with: mdtk, adunitPath: "/34631970/AdExchangeOutstream/display_video_feed", delegate: self)
+                cell.load(with: mdtk, zoneId: 1, adunitPath: "/34631970/AdExchangeOutstream/display_video_feed", delegate: self)
                 return cell
             case .item(let text):
                 let cell = UITableViewCell()
@@ -79,6 +79,14 @@ extension VideoFeedSampleTableViewController: UITableViewDelegate {
 extension VideoFeedSampleTableViewController: VideoFeedCarousselDelegate {
     func didTapOnItem(at videoId: String) {
         print("didTapOnItem at \(videoId)")
-        navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, mdtk: mdtk, adunitPath: "/34631970/AdExchangeOutstream/display_video_feed"), animated: true)
+        navigationController?.pushViewController(
+            VideoFeedViewController(
+                videoId: videoId,
+                zoneId: 1,
+                mdtk: mdtk,
+                adunitPath: "/34631970/AdExchangeOutstream/display_video_feed"
+            ),
+            animated: true
+        )
     }
 }

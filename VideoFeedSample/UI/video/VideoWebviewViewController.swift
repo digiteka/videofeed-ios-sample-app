@@ -45,6 +45,9 @@ class VideoWebviewViewController: UIViewController {
         self.webview = WKWebView(frame: self.webContainer.bounds, configuration: config)
 
         self.webContainer.addSubview(webview)
+
+        let mdtk_ = self.mdtk ?? "01857682"
+
         let contentHTML = """
         <!DOCTYPE html>
         <html>
