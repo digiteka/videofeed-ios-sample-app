@@ -65,7 +65,7 @@ Pour charger le carroussel, vous pouvez utiliser l'extrait de code suivant :
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // [...]
         let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
-        cell.load(with: mdtk, delegate: self)
+        cell.load(with: mdtk, zoneId: 1, delegate: self)
         return cell
         // [...]
     }
@@ -91,7 +91,7 @@ if let carrouselView_ = carrouselView {
 Pour charger le carroussel, vous pouvez utiliser l'extrait de code suivant :
 
 ```swift
-self.carrouselView.load(with: mdtk, adunitPath: "networkCode/cheminDuBlocdAnnonce", delegate: self)
+self.carrouselView.load(with: mdtk, zoneId: 1, adunitPath: "networkCode/cheminDuBlocdAnnonce", delegate: self)
 ```
 
 ### Delegate
@@ -114,13 +114,29 @@ Si le paramètre delegate n'est pas défini, il présentera le `VideoFeedViewCon
 
 Le `VideoFeedSDK` fournit un `UIViewController` que vous pouvez utiliser comme vous le souhaitez
 
-Il peut être utilisé avec un `videoId` et un `mdtk`.
+Il peut être utilisé avec un `videoId`, un `zoneId` un `mdtk`.
 Si aucun `videoId` n'est fourni, il affichera la première vidéo du flux.
 
 ```swift
+let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk, delegate: self)
 let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk)
 let videoFeedViewController = VideoFeedViewController(mdtk: mdtk)
 ```
+
+le paramètre `showCloseButton` permet d'afficher ou non le bouton de fermeture interne du `VideoFeedViewController`.
+```swift
+let videoFeedViewController = VideoFeedViewController(mdtk: mdtk, showCloseButton: true)
+```
+
+Le `VideoFeedViewController` accepte un `delegate` pour gérer les clicks sur des liens
+
+```swift
+public protocol VideoFeedDelegate: AnyObject {
+    /// Called when an external link is tapped
+    func handleExternalLink(url: URL)
+}
+```
+
 ## SwiftUI
 
 ### VideoFeedCarrouselViewSUI
@@ -130,7 +146,7 @@ let videoFeedViewController = VideoFeedViewController(mdtk: mdtk)
 ```swift
 var body: some View {
     
-    VideoFeedCarrouselViewSUI(mdtk: mdtk)
+    VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1)
                     .frame(maxWidth: .infinity)
                     .frame(height: 300)
 
@@ -147,15 +163,17 @@ var body: some View {
 
 `VideoFeedViewSUI` est une vue SwiftUI personnalisée conçue pour afficher des éléments de flux vidéo :
 
-Elle peut être utilisée avec un `videoId` et un `mdtk`.
+Elle peut être utilisée avec un `videoId`, un `zoneId` et un `mdtk`.
 Si aucun `videoId` n'est fourni, elle affichera la première vidéo du flux.
 
 ```swift
-    VideoFeedViewSUI(videoId: videoId, mdtk: mdtk)
+    VideoFeedViewSUI(videoId: videoId, mdtk: mdtk, onLinkActivated: { url in
+                        print("Link activated: \(url)")
+                    })
     VideoFeedViewSUI(mdtk: mdtk)
 ```
 
-# Ouvrir le videoFeed depuis le plyer web digiteka
+# Ouvrir le videoFeed depuis le player web digiteka
 
 Configurer votre webview content le player digiteka pour écouter les évènements "post message"
 
