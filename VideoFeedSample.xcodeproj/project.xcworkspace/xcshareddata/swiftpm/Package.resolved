@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/digiteka/videofeed-ios-build",
       "state" : {
-        "revision" : "ab9953959cbba90c7e703adc9e85f767caf9d97f",
-        "version" : "2.1.3"
+        "revision" : "09c8bfdf37e1620da4aed65a8f221ea7b0f9f981",
+        "version" : "2.1.4"
       }
     }
   ],
