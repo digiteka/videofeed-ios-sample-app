@@ -16,11 +16,13 @@ class VideoFeedCarousselSampleViewController: UIViewController {
 
     private var mdtk: String!
     private var zoneId: Int!
+    private var backgroundCarrouselColor: UIColor?
 
-    convenience init(mdtk: String, zoneId: Int) {
+    convenience init(mdtk: String, zoneId: Int, backgroundCarrouselColor: UIColor? = nil) {
         self.init()
         self.mdtk = mdtk
         self.zoneId = zoneId
+        self.backgroundCarrouselColor = backgroundCarrouselColor
     }
     
     override func viewDidLoad() {
@@ -38,6 +40,6 @@ class VideoFeedCarousselSampleViewController: UIViewController {
             carrouselContainerview.addConstraint(NSLayoutConstraint(item: carrouselView_, attribute: .bottom, relatedBy: .equal, toItem: carrouselContainerview, attribute: .bottom, multiplier: 1.0, constant: 0))
         }
 
-        self.carrouselView?.load(with: mdtk, zoneId: zoneId)
+        self.carrouselView?.load(with: mdtk, zoneId: zoneId, backgroundCarrouselColor: backgroundCarrouselColor)
     }
 }

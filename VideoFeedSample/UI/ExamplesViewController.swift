@@ -24,13 +24,14 @@ class ExamplesViewController: UIViewController {
         case tableview
         case collectionview
         case view
+        case viewWithBackground
         case swiftui
         case videofeed
         case playerVideo
     }
 
 
-    var carrousselData: [OptionsType] = [.tableview, .collectionview, .view, .swiftui]
+    var carrousselData: [OptionsType] = [.tableview, .collectionview, .view, .viewWithBackground, .swiftui]
     var videoFeedData: [OptionsType] = [.videofeed]
 
 
@@ -101,6 +102,8 @@ extension ExamplesViewController: UITableViewDataSource {
                 cell.textLabel?.text = "Collectionview"
             case .view:
                 cell.textLabel?.text = "View"
+            case .viewWithBackground:
+                cell.textLabel?.text = "View with background color"
             case .swiftui:
                 cell.textLabel?.text = "SwiftUI"
             case .videofeed:
@@ -145,6 +148,8 @@ extension ExamplesViewController: UITableViewDelegate {
                 navigationController?.pushViewController(VideoFeedSampleCollectionViewController(mdtk: mdtk, zoneId: zoneId), animated: true)
             case .view:
                 navigationController?.pushViewController(VideoFeedCarousselSampleViewController(mdtk: mdtk, zoneId: zoneId), animated: true)
+            case .viewWithBackground:
+                navigationController?.pushViewController(VideoFeedCarousselSampleViewController(mdtk: mdtk, zoneId: zoneId, backgroundCarrouselColor: UIColor.cyan), animated: true)
             case .swiftui:
                 if #available(iOS 13.0, *) {
                     let vc = UIHostingController(rootView: VideoFeedSampleSwiftuiView(mdtk: mdtk))
