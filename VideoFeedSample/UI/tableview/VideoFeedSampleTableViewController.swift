@@ -14,15 +14,17 @@ class VideoFeedSampleTableViewController: UIViewController {
 
     private var data: [DataType] = []
     private var mdtk: String!
+    private var zoneId: Int!
 
     enum DataType {
         case carroussel
         case item(String)
     }
 
-    convenience init(mdtk: String) {
+    convenience init(mdtk: String, zoneId: Int) {
         self.init()
         self.mdtk = mdtk
+        self.zoneId = zoneId
     }
 
     override func viewDidLoad() {
@@ -59,7 +61,7 @@ extension VideoFeedSampleTableViewController: UITableViewDataSource {
         switch data[indexPath.row] {
             case .carroussel:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
-                cell.load(with: mdtk, zoneId: 1, adunitPath: "/34631970/AdExchangeOutstream/display_video_feed", delegate: self)
+                cell.load(with: mdtk, zoneId: zoneId, adunitPath: "/34631970/AdExchangeOutstream/display_video_feed", delegate: self)
                 return cell
             case .item(let text):
                 let cell = UITableViewCell()
@@ -77,12 +79,12 @@ extension VideoFeedSampleTableViewController: UITableViewDelegate {
 }
 
 extension VideoFeedSampleTableViewController: VideoFeedCarousselDelegate {
-    func didTapOnItem(at videoId: String) {
-        print("didTapOnItem at \(videoId)")
+    func didTapOnItem(at videoId: String, zoneId: Int?) {
+        print("didTapOnItem at \(videoId) and zone \(zoneId)")
         navigationController?.pushViewController(
             VideoFeedViewController(
                 videoId: videoId,
-                zoneId: 1,
+                zoneId: zoneId,
                 mdtk: mdtk,
                 adunitPath: "/34631970/AdExchangeOutstream/display_video_feed"
             ),

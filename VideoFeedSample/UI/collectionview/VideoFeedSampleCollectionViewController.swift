@@ -17,15 +17,17 @@ class VideoFeedSampleCollectionViewController: UIViewController {
     private var minimumSpacing: CGFloat = 5
     private var edgeInsetPadding: CGFloat = 10
     private var mdtk: String!
+    private var zoneId: Int!
 
     enum DataType {
         case carroussel
         case item(String, UIColor)
     }
 
-    convenience init(mdtk: String) {
+    convenience init(mdtk: String, zoneId: Int) {
         self.init()
         self.mdtk = mdtk
+        self.zoneId = zoneId
     }
 
     override func viewDidLoad() {
@@ -59,7 +61,7 @@ extension VideoFeedSampleCollectionViewController: UICollectionViewDataSource {
         switch data[indexPath.row] {
             case .carroussel:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoFeedCarrouselCollectionViewCell", for: indexPath) as! VideoFeedCarrouselCollectionViewCell
-                cell.load(with: mdtk, delegate: self)
+                cell.load(with: mdtk, zoneId: zoneId, delegate: self)
                 return cell
             case .item(let text, let color):
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoFeedSampleCollectionViewCell", for: indexPath) as! VideoFeedSampleCollectionViewCell
@@ -98,8 +100,8 @@ extension VideoFeedSampleCollectionViewController: UICollectionViewDelegateFlowL
 }
 
 extension VideoFeedSampleCollectionViewController: VideoFeedCarousselDelegate {
-    func didTapOnItem(at videoId: String) {
-        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, mdtk: mdtk), animated: true)
+    func didTapOnItem(at videoId: String, zoneId: Int?) {
+        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk), animated: true)
     }
 }
 

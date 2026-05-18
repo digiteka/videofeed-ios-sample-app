@@ -35,21 +35,19 @@ struct VideoFeedSampleSwiftuiView: View {
             }
             Text("SwuitUI CarrouselView")
 
-
-
-            VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1) { videoId in
+            VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1) { videoId, zoneId in
                 print("Selected videoId: \(videoId)")
                 self.videoId = videoId
-                self.zoneId = 1
+                self.zoneId = zoneId ?? 1
                 self.isVideoFeedPresented = true
             }
             .frame(maxWidth: .infinity)
             .frame(height: 300)
 
-            VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId in
+            VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId, zoneId in
                 print("Selected videoId: \(videoId)")
                 self.videoId = videoId
-                self.zoneId = 0
+                self.zoneId = zoneId ?? 0
                 self.isVideoFeedPresented = true
             }
             .frame(maxWidth: .infinity)

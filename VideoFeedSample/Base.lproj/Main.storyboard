@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23094" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lYH-QP-KHv">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="lYH-QP-KHv">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23084"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -14,7 +14,7 @@
             <objects>
                 <navigationController id="lYH-QP-KHv" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="HEF-3R-JLT">
-                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -34,11 +34,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="J4b-nZ-c0o">
-                                <rect key="frame" x="0.0" y="167" width="393" height="651"/>
+                                <rect key="frame" x="0.0" y="275" width="393" height="509"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="MDTK" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="eug-tm-3iK">
-                                <rect key="frame" x="20" y="118" width="353" height="34"/>
+                                <rect key="frame" x="20" y="187" width="353" height="34"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Zone Id (optional)" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="uze-XD-j9K" userLabel="Zone">
+                                <rect key="frame" x="20" y="231" width="353" height="34"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
@@ -47,7 +52,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="J4b-nZ-c0o" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="10o-Dz-HHj"/>
-                            <constraint firstItem="J4b-nZ-c0o" firstAttribute="top" secondItem="eug-tm-3iK" secondAttribute="bottom" constant="15" id="OI5-pE-l7l"/>
+                            <constraint firstItem="uze-XD-j9K" firstAttribute="trailing" secondItem="eug-tm-3iK" secondAttribute="trailing" id="2Zu-qk-obN"/>
+                            <constraint firstItem="uze-XD-j9K" firstAttribute="leading" secondItem="eug-tm-3iK" secondAttribute="leading" id="4zZ-t0-DEc"/>
+                            <constraint firstItem="J4b-nZ-c0o" firstAttribute="top" secondItem="uze-XD-j9K" secondAttribute="bottom" constant="10" id="OI5-pE-l7l"/>
+                            <constraint firstItem="uze-XD-j9K" firstAttribute="top" secondItem="eug-tm-3iK" secondAttribute="bottom" constant="10" id="j6r-95-wmc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="eug-tm-3iK" secondAttribute="trailing" constant="20" id="lus-G5-Vb8"/>
                             <constraint firstItem="eug-tm-3iK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="15" id="n6P-MJ-PTa"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="J4b-nZ-c0o" secondAttribute="trailing" id="qYk-y2-1Bc"/>
@@ -57,8 +65,9 @@
                     </view>
                     <navigationItem key="navigationItem" id="sb6-x4-UVd"/>
                     <connections>
-                        <outlet property="mdtkTextfield" destination="eug-tm-3iK" id="TPF-2Q-Efg"/>
+                        <outlet property="mdtkTextField" destination="eug-tm-3iK" id="JFh-DU-rWD"/>
                         <outlet property="tableview" destination="J4b-nZ-c0o" id="Bo4-a9-qcY"/>
+                        <outlet property="zoneIdTextField" destination="uze-XD-j9K" id="8jQ-KX-QcU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

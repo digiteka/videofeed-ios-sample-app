@@ -15,10 +15,12 @@ class VideoWebviewViewController: UIViewController {
 
     private var webview: WKWebView!
     private var mdtk: String!
+    private var zoneId: Int!
 
-    convenience init(mdtk: String) {
+    convenience init(mdtk: String, zoneId: Int) {
         self.init()
         self.mdtk = mdtk
+        self.zoneId = zoneId
     }
 
     override func viewDidLoad() {
@@ -60,7 +62,7 @@ class VideoWebviewViewController: UIViewController {
         </script>
         <body id="bodyy">
             <div id="container" class="content">
-                <iframe width="100%" height="100%" src="https://www.ultimedia.com/deliver/generic/iframe/mdtk/01857682/zone/1/showtitle/1/src/xkx5zlf/chromeless/1" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" hspace="0" vspace="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"  referrerpolicy="no-referrer-when-downgrade"></iframe> 
+                <iframe width="100%" height="100%" src="https://www.ultimedia.com/deliver/generic/iframe/mdtk/\(mdtk ?? "01857682")/zone/\(zoneId ?? 1)/showtitle/1/src/xkx5zlf/chromeless/1" frameborder="0" scrolling="no" marginwidth="0" marginheight="0" hspace="0" vspace="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen="true"  referrerpolicy="no-referrer-when-downgrade"></iframe> 
             </div>
         </body>
         </html>
@@ -81,7 +83,7 @@ extension VideoWebviewViewController : WKScriptMessageHandler {
 
         if messageBody.contains("trigger_vf_chromeless") {
             let id = messageBody.replacingOccurrences(of: "trigger_vf_chromeless-", with: "")
-            let controller = VideoFeedViewController(videoId: id, mdtk: mdtk)
+            let controller = VideoFeedViewController(videoId: id, zoneId: zoneId, mdtk: mdtk)
             self.navigationController?.pushViewController(controller, animated: true)
         }
     }

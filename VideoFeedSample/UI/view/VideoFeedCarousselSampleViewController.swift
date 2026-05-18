@@ -15,10 +15,12 @@ class VideoFeedCarousselSampleViewController: UIViewController {
     private var carrouselView: VideoFeedCarrouselView?
 
     private var mdtk: String!
+    private var zoneId: Int!
 
-    convenience init(mdtk: String) {
+    convenience init(mdtk: String, zoneId: Int) {
         self.init()
         self.mdtk = mdtk
+        self.zoneId = zoneId
     }
     
     override func viewDidLoad() {
@@ -36,6 +38,6 @@ class VideoFeedCarousselSampleViewController: UIViewController {
             carrouselContainerview.addConstraint(NSLayoutConstraint(item: carrouselView_, attribute: .bottom, relatedBy: .equal, toItem: carrouselContainerview, attribute: .bottom, multiplier: 1.0, constant: 0))
         }
 
-        self.carrouselView?.load(with: mdtk)
+        self.carrouselView?.load(with: mdtk, zoneId: zoneId)
     }
 }

@@ -14,8 +14,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableview: UITableView!
 
     private let defaultMdtk = "01470628"
+    private let defaultZoneId: Int = 1
 
-    @IBOutlet weak var mdtkTextfield: UITextField!
+    @IBOutlet weak var mdtkTextField: UITextField!
+    @IBOutlet weak var zoneIdTextField: UITextField!
 
     enum OptionsType: CaseIterable {
         case tableview
@@ -90,24 +92,31 @@ extension ViewController: UITableViewDelegate {
 
         var mdtk = self.defaultMdtk
 
-        if mdtkTextfield.text != nil && mdtkTextfield.text != "" {
-            mdtk = mdtkTextfield.text!
+        if mdtkTextField.text != nil && mdtkTextField.text != "" {
+            mdtk = mdtkTextField.text!
+        }
+        
+        var zoneId = self.defaultZoneId
+        
+        if zoneIdTextField.text != nil && zoneIdTextField.text != "" {
+            let zoneIdString = zoneIdTextField.text!
+            zoneId = Int(zoneIdString) ?? defaultZoneId
         }
 
         switch option {
             case .tableview:
-                navigationController?.pushViewController(VideoFeedSampleTableViewController(mdtk: mdtk), animated: true)
+                navigationController?.pushViewController(VideoFeedSampleTableViewController(mdtk: mdtk, zoneId: zoneId), animated: true)
             case .collectionview:
-                navigationController?.pushViewController(VideoFeedSampleCollectionViewController(mdtk: mdtk), animated: true)
+                navigationController?.pushViewController(VideoFeedSampleCollectionViewController(mdtk: mdtk, zoneId: zoneId), animated: true)
             case .view:
-                navigationController?.pushViewController(VideoFeedCarousselSampleViewController(mdtk: mdtk), animated: true)
+                navigationController?.pushViewController(VideoFeedCarousselSampleViewController(mdtk: mdtk, zoneId: zoneId), animated: true)
             case .swiftui:
                 if #available(iOS 13.0, *) {
                     let vc = UIHostingController(rootView: VideoFeedSampleSwiftuiView(mdtk: mdtk))
                     navigationController?.pushViewController(vc, animated: true)
                 }
             case .videofeed:
-                navigationController?.pushViewController(VideoFeedViewController(mdtk: mdtk), animated: true)
+                navigationController?.pushViewController(VideoFeedViewController(zoneId: zoneId, mdtk: mdtk), animated: true)
         }
     }
 }
