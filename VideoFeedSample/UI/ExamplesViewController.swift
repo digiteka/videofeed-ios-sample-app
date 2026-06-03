@@ -27,12 +27,13 @@ class ExamplesViewController: UIViewController {
         case viewWithBackground
         case swiftui
         case videofeed
+        case videofeedWithParams
         case playerVideo
     }
 
 
     var carrousselData: [OptionsType] = [.tableview, .collectionview, .view, .viewWithBackground, .swiftui]
-    var videoFeedData: [OptionsType] = [.videofeed]
+    var videoFeedData: [OptionsType] = [.videofeed, .videofeedWithParams]
 
 
     override func viewDidLoad() {
@@ -108,6 +109,8 @@ extension ExamplesViewController: UITableViewDataSource {
                 cell.textLabel?.text = "SwiftUI"
             case .videofeed:
                 cell.textLabel?.text = "VideoFeed"
+            case .videofeedWithParams:
+                cell.textLabel?.text = "VideoFeed with params"
             case .playerVideo:
                 cell.textLabel?.text = "Player Video"
             case .none:
@@ -160,6 +163,18 @@ extension ExamplesViewController: UITableViewDelegate {
                     VideoFeedViewController(
                         zoneId: zoneId,
                         mdtk: mdtk
+                    ),
+                    animated: true
+                )
+            case .videofeedWithParams:
+                navigationController?.pushViewController(
+                    VideoFeedViewController(
+                        zoneId: zoneId,
+                        mdtk: mdtk,
+                        adunitPath: "adunitPath",
+                        adunitPathInterstitial: "adunitPathInterstitial",
+                        custParams: "key=value&ppid=video",
+                        targetings: "key=value&ppid=display"
                     ),
                     animated: true
                 )
