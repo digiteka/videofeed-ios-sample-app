@@ -17,6 +17,17 @@ Vous pouvez intégrer `VideoFeedSDK` en tant que package Swift en ajoutant l'URL
 
 # Utilisation
 
+## Paramètres de ciblage publicitaire
+
+Toutes les vues et contrôleurs de vue du SDK acceptent les paramètres de ciblage publicitaire optionnels suivants :
+
+| Paramètre | Type | Description |
+|-----------|------|-------------|
+| `adunitPath` | `String?` | Le chemin du bloc d'annonce GAM (ex. `"networkCode/cheminDuBlocdAnnonce"`). Utilisé pour le ciblage des annonces bannière et in-stream. |
+| `adunitPathInterstitial` | `String?` | Le chemin du bloc d'annonce GAM pour les annonces interstitielles. |
+| `custParams` | `String?` | Paramètres de ciblage personnalisés transmis à GAM sous forme de chaîne de requête (ex. `"category=sport&env=prod"`). |
+| `targetings` | `String?` | Paramètres de ciblage supplémentaires transmis au flux vidéo (ex. `"section=home"`). |
+
 ## UIKit
 
 ### UICollectionView
@@ -38,13 +49,19 @@ Pour charger le carroussel, vous pouvez utiliser l'extrait de code suivant :
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // [...]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoFeedCarousselCollectionViewCell", for: indexPath) as! VideoFeedCarousselCollectionViewCell
-        cell.load(with: mdtk, delegate: self)
+        cell.load(
+            with: mdtk,
+            zoneId: 1,
+            adunitPath: "networkCode/cheminDuBlocdAnnonce",
+            adunitPathInterstitial: "networkCode/cheminInterstitiel",
+            custParams: "category=sport",
+            targetings: "section=home",
+            delegate: self
+        )
         return cell
         // [...]
     }
 ```
-
-
 
 ### UITableView
 
@@ -65,7 +82,15 @@ Pour charger le carroussel, vous pouvez utiliser l'extrait de code suivant :
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // [...]
         let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
-        cell.load(with: mdtk, zoneId: 1, delegate: self)
+        cell.load(
+            with: mdtk,
+            zoneId: 1,
+            adunitPath: "networkCode/cheminDuBlocdAnnonce",
+            adunitPathInterstitial: "networkCode/cheminInterstitiel",
+            custParams: "category=sport",
+            targetings: "section=home",
+            delegate: self
+        )
         return cell
         // [...]
     }
@@ -91,7 +116,21 @@ if let carrouselView_ = carrouselView {
 Pour charger le carroussel, vous pouvez utiliser l'extrait de code suivant :
 
 ```swift
-self.carrouselView.load(with: mdtk, zoneId: 1, adunitPath: "networkCode/cheminDuBlocdAnnonce", delegate: self)
+self.carrouselView.load(
+    with: mdtk,
+    zoneId: 1,
+    adunitPath: "networkCode/cheminDuBlocdAnnonce",
+    adunitPathInterstitial: "networkCode/cheminInterstitiel",
+    custParams: "category=sport",
+    targetings: "section=home",
+    delegate: self
+)
+```
+
+Le paramètre `backgroundCarrouselColor` permet de définir la couleur de fond du carrousel (couche native et corps HTML). Il est transparent par défaut :
+
+```swift
+self.carrouselView.load(with: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black, delegate: self)
 ```
 
 ### Delegate
@@ -102,8 +141,8 @@ La classe delegate doit être conforme au protocole `VideoFeedCarousselDelegate`
 
 ```swift
 extension VideoFeedSampleCollectionViewController: VideoFeedCarousselDelegate {
-    func didTapOnItem(at videoId: String) {
-        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, mdtk: mdtk), animated: true)
+    func didTapOnItem(at videoId: String, zoneId: Int?) {
+        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk), animated: true)
     }
 }
 ```
@@ -116,14 +155,30 @@ Le `VideoFeedSDK` fournit un `UIViewController` que vous pouvez utiliser comme v
 
 Il peut être utilisé avec un `videoId`, un `zoneId` un `mdtk`.
 Si aucun `videoId` n'est fourni, il affichera la première vidéo du flux.
+Si aucune `zoneId` n'est fourni, il utilisera la première zone (id 1)
 
 ```swift
-let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk, delegate: self)
+let videoFeedViewController = VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk, delegate: self)
+let videoFeedViewController = VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk)
 let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk)
 let videoFeedViewController = VideoFeedViewController(mdtk: mdtk)
 ```
 
-le paramètre `showCloseButton` permet d'afficher ou non le bouton de fermeture interne du `VideoFeedViewController`.
+Les paramètres de ciblage publicitaire sont également disponibles :
+
+```swift
+let videoFeedViewController = VideoFeedViewController(
+    videoId: videoId,
+    zoneId: zoneId,
+    mdtk: mdtk,
+    adunitPath: "networkCode/cheminDuBlocdAnnonce",
+    adunitPathInterstitial: "networkCode/cheminInterstitiel",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
+```
+
+Le paramètre `showCloseButton` permet d'afficher ou non le bouton de fermeture interne du `VideoFeedViewController`.
 ```swift
 let videoFeedViewController = VideoFeedViewController(mdtk: mdtk, showCloseButton: true)
 ```
@@ -150,13 +205,36 @@ var body: some View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 300)
 
-    VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId in
-        print("Selected videoId: \(videoId)")
+    VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId, zoneId in
+        print("Selected videoId: \(videoId) zoneId: \(zoneId)")
     }
     .frame(maxWidth: .infinity)
     .frame(height: 300)
 }
  
+```
+
+Les paramètres de ciblage publicitaire sont également disponibles :
+
+```swift
+VideoFeedCarrouselViewSUI(
+    mdtk: mdtk,
+    zoneId: 1,
+    adunitPath: "networkCode/cheminDuBlocdAnnonce",
+    adunitPathInterstitial: "networkCode/cheminInterstitiel",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
+.frame(maxWidth: .infinity)
+.frame(height: 300)
+```
+
+Le paramètre `backgroundCarrouselColor` permet de définir la couleur de fond du carrousel (couche native et corps HTML). Il est transparent par défaut :
+
+```swift
+VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black)
+    .frame(maxWidth: .infinity)
+    .frame(height: 300)
 ```
 
 ### VideoFeedViewSUI
@@ -165,12 +243,27 @@ var body: some View {
 
 Elle peut être utilisée avec un `videoId`, un `zoneId` et un `mdtk`.
 Si aucun `videoId` n'est fourni, elle affichera la première vidéo du flux.
+si aucun `zoneId` n'est fourni, elle utilisera la première zone (id 1)
 
 ```swift
-    VideoFeedViewSUI(videoId: videoId, mdtk: mdtk, onLinkActivated: { url in
+    VideoFeedViewSUI(videoId: videoId, zoneId: zoneId, mdtk: mdtk, onLinkActivated: { url in
                         print("Link activated: \(url)")
                     })
     VideoFeedViewSUI(mdtk: mdtk)
+```
+
+Les paramètres de ciblage publicitaire sont également disponibles :
+
+```swift
+VideoFeedViewSUI(
+    videoId: videoId,
+    zoneId: zoneId,
+    mdtk: mdtk,
+    adUnitPath: "networkCode/cheminDuBlocdAnnonce",
+    adUnitPathInterstitial: "networkCode/cheminInterstitiel",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
 ```
 
 # Ouvrir le videoFeed depuis le player web digiteka

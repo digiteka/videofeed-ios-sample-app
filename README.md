@@ -9,7 +9,6 @@ Digiteka VideoFeed library provides an interactive view to display lists of medi
 
 Simply add the dependency to your project using this solution:
 
-
 ## Swift Package Manager
 
 You can integrate `VideoFeedSDK` as a Swift package by adding the following URL to the public package repository that you can add in Xcode:
@@ -17,6 +16,17 @@ You can integrate `VideoFeedSDK` as a Swift package by adding the following URL 
 `https://github.com/digiteka/videofeed-ios-build.git`
 
 # Usage
+
+## Ad Targeting Parameters
+
+All SDK views and view controllers accept the following optional ad targeting parameters:
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `adunitPath` | `String?` | The GAM ad unit path (e.g. `"networkCode/pathToAd"`). Used for banner/in-stream ad targeting. |
+| `adunitPathInterstitial` | `String?` | The GAM ad unit path for interstitial ads. |
+| `custParams` | `String?` | Custom key-value targeting parameters passed to GAM as a query string (e.g. `"category=sport&env=prod"`). |
+| `targetings` | `String?` | Additional targeting parameters passed to the video feed (e.g. `"section=home"`). |
 
 ## UIKit
 
@@ -39,13 +49,19 @@ To load the carroussel, you can use the following code snippet:
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // [...]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoFeedCarousselCollectionViewCell", for: indexPath) as! VideoFeedCarousselCollectionViewCell
-        cell.load(with: mdtk, delegate: self)
+        cell.load(
+            with: mdtk,
+            zoneId: 1,
+            adunitPath: "networkCode/pathToAd",
+            adunitPathInterstitial: "networkCode/pathToInterstitial",
+            custParams: "category=sport",
+            targetings: "section=home",
+            delegate: self
+        )
         return cell
         // [...]
     }
 ```
-
-
 
 ### UITableView
 
@@ -66,7 +82,15 @@ To load the carroussel, you can use the following code snippet:
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // [...]
         let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
-        cell.load(with: mdtk, zoneId: 1, delegate: self)
+        cell.load(
+            with: mdtk,
+            zoneId: 1,
+            adunitPath: "networkCode/pathToAd",
+            adunitPathInterstitial: "networkCode/pathToInterstitial",
+            custParams: "category=sport",
+            targetings: "section=home",
+            delegate: self
+        )
         return cell
         // [...]
     }
@@ -92,7 +116,21 @@ if let carrouselView_ = carrouselView {
 To load the carroussel, you can use the following code snippet:
 
 ```swift
-self.carrouselView.load(with: mdtk, zoneId: 1, adunitPath: "networkCode/pathToAd", delegate: self)
+self.carrouselView.load(
+    with: mdtk,
+    zoneId: 1,
+    adunitPath: "networkCode/pathToAd",
+    adunitPathInterstitial: "networkCode/pathToInterstitial",
+    custParams: "category=sport",
+    targetings: "section=home",
+    delegate: self
+)
+```
+
+The `backgroundCarrouselColor` parameter sets the background color of the carousel view (native layer and HTML body). It defaults to transparent:
+
+```swift
+self.carrouselView.load(with: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black, delegate: self)
 ```
 
 ### Delegate
@@ -102,8 +140,8 @@ The delegate must conform to the `VideoFeedCarousselDelegate` protocol:
 
 ```swift
 extension VideoFeedSampleCollectionViewController: VideoFeedCarousselDelegate {
-    func didTapOnItem(at videoId: String) {
-        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, mdtk: mdtk), animated: true)
+    func didTapOnItem(at videoId: String, zoneId: Int?) {
+        self.navigationController?.pushViewController(VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk), animated: true)
     }
 }
 ```
@@ -116,15 +154,31 @@ If the delegate is not set, it will present the `VideoFeedViewController` by its
 The `VideoFeedSDK` provide a `UIViewController` that you can use as you want
 
 It can be used with a `videoId`, a `zoneId` and a `mdtk`. 
-If no videoId is provided, it will display the first video of the feed.
+If no `videoId` is provided, it will display the first video of the feed.
+if no `zoneId` is provided, it will use the first zone (id 1).
 
 ```swift
-let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk, delegate: self)
+let videoFeedViewController = VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk, delegate: self)
+let videoFeedViewController = VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk)
 let videoFeedViewController = VideoFeedViewController(videoId: videoId, mdtk: mdtk)
 let videoFeedViewController = VideoFeedViewController(mdtk: mdtk)
 ```
 
-a parameter `showCloseButton` can be added to show or not a close button in the `VideoFeedViewController`.
+Ad targeting parameters are also available:
+
+```swift
+let videoFeedViewController = VideoFeedViewController(
+    videoId: videoId,
+    zoneId: zoneId,
+    mdtk: mdtk,
+    adunitPath: "networkCode/pathToAd",
+    adunitPathInterstitial: "networkCode/pathToInterstitial",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
+```
+
+A parameter `showCloseButton` can be added to show or not a close button in the `VideoFeedViewController`.
 ```swift
 let videoFeedViewController = VideoFeedViewController(mdtk: mdtk, showCloseButton: true)
 ```
@@ -151,13 +205,36 @@ var body: some View {
                     .frame(maxWidth: .infinity)
                     .frame(height: 300)
 
-    VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId in
-        print("Selected videoId: \(videoId)")
+    VideoFeedCarrouselViewSUI(mdtk: mdtk) { videoId, zoneId in
+        print("Selected videoId: \(videoId) zoneId: \(zoneId)")
     }
     .frame(maxWidth: .infinity)
     .frame(height: 300)
 }
  
+```
+
+Ad targeting parameters are also available:
+
+```swift
+VideoFeedCarrouselViewSUI(
+    mdtk: mdtk,
+    zoneId: 1,
+    adunitPath: "networkCode/pathToAd",
+    adunitPathInterstitial: "networkCode/pathToInterstitial",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
+.frame(maxWidth: .infinity)
+.frame(height: 300)
+```
+
+The `backgroundCarrouselColor` parameter sets the background color of the carousel view (native layer and HTML body). It defaults to transparent:
+
+```swift
+VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black)
+    .frame(maxWidth: .infinity)
+    .frame(height: 300)
 ```
 
 ### VideoFeedViewSUI
@@ -166,12 +243,27 @@ var body: some View {
 
 It can be used with a `videoId`, a `zoneId` and a `mdtk`. 
 If no videoId is provided, it will display the first video of the feed.
+If no zoneId is provided, it will use the first zone (id 1).
 
 ```swift
-    VideoFeedViewSUI(videoId: videoId, mdtk: mdtk, onLinkActivated: { url in
+    VideoFeedViewSUI(videoId: videoId, zoneId: zoneId, mdtk: mdtk, onLinkActivated: { url in
                         print("Link activated: \(url)")
                     })
     VideoFeedViewSUI(mdtk: mdtk)
+```
+
+Ad targeting parameters are also available:
+
+```swift
+VideoFeedViewSUI(
+    videoId: videoId,
+    zoneId: zoneId,
+    mdtk: mdtk,
+    adUnitPath: "networkCode/pathToAd",
+    adUnitPathInterstitial: "networkCode/pathToInterstitial",
+    custParams: "category=sport",
+    targetings: "section=home",
+)
 ```
 
 # Open the VideoFeed from a digiteka web player
