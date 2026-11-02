@@ -154,7 +154,7 @@ extension ExamplesViewController: UITableViewDelegate {
             case .viewWithBackground:
                 navigationController?.pushViewController(VideoFeedCarousselSampleViewController(mdtk: mdtk, zoneId: zoneId, backgroundCarrouselColor: UIColor.cyan), animated: true)
             case .swiftui:
-                if #available(iOS 13.0, *) {
+                if #available(iOS 14.0, *) {
                     let vc = UIHostingController(rootView: VideoFeedSampleSwiftuiView(mdtk: mdtk))
                     navigationController?.pushViewController(vc, animated: true)
                 }
@@ -162,7 +162,9 @@ extension ExamplesViewController: UITableViewDelegate {
                 navigationController?.pushViewController(
                     VideoFeedViewController(
                         zoneId: zoneId,
-                        mdtk: mdtk
+                        mdtk: mdtk,
+                        showCloseButton: true,
+                        delegate: self
                     ),
                     animated: true
                 )
