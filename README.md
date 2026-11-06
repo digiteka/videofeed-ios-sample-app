@@ -51,7 +51,7 @@ To load the carroussel, you can use the following code snippet:
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoFeedCarousselCollectionViewCell", for: indexPath) as! VideoFeedCarousselCollectionViewCell
         cell.load(
             with: mdtk,
-            zoneId: 1,
+            zoneId: 0,
             adunitPath: "networkCode/pathToAd",
             adunitPathInterstitial: "networkCode/pathToInterstitial",
             custParams: "category=sport",
@@ -84,7 +84,7 @@ To load the carroussel, you can use the following code snippet:
         let cell = tableView.dequeueReusableCell(withIdentifier: "VideoFeedCarousselTableViewCell", for: indexPath) as! VideoFeedCarrouselTableViewCell
         cell.load(
             with: mdtk,
-            zoneId: 1,
+            zoneId: 0,
             adunitPath: "networkCode/pathToAd",
             adunitPathInterstitial: "networkCode/pathToInterstitial",
             custParams: "category=sport",
@@ -118,7 +118,7 @@ To load the carroussel, you can use the following code snippet:
 ```swift
 self.carrouselView.load(
     with: mdtk,
-    zoneId: 1,
+    zoneId: 0,
     adunitPath: "networkCode/pathToAd",
     adunitPathInterstitial: "networkCode/pathToInterstitial",
     custParams: "category=sport",
@@ -130,7 +130,7 @@ self.carrouselView.load(
 The `backgroundCarrouselColor` parameter sets the background color of the carousel view (native layer and HTML body). It defaults to transparent:
 
 ```swift
-self.carrouselView.load(with: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black, delegate: self)
+self.carrouselView.load(with: mdtk, zoneId: 0, backgroundCarrouselColor: UIColor.black, delegate: self)
 ```
 
 ### Delegate
@@ -155,7 +155,7 @@ The `VideoFeedSDK` provide a `UIViewController` that you can use as you want
 
 It can be used with a `videoId`, a `zoneId` and a `mdtk`. 
 If no `videoId` is provided, it will display the first video of the feed.
-if no `zoneId` is provided, it will use the first zone (id 1).
+if no `zoneId` is provided, it will use the first zone (id 0).
 
 ```swift
 let videoFeedViewController = VideoFeedViewController(videoId: videoId, zoneId: zoneId, mdtk: mdtk, delegate: self)
@@ -201,7 +201,7 @@ public protocol VideoFeedDelegate: AnyObject {
 ```swift
 var body: some View {
     
-    VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1)
+    VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 0)
                     .frame(maxWidth: .infinity)
                     .frame(height: 300)
 
@@ -219,7 +219,7 @@ Ad targeting parameters are also available:
 ```swift
 VideoFeedCarrouselViewSUI(
     mdtk: mdtk,
-    zoneId: 1,
+    zoneId: 0,
     adunitPath: "networkCode/pathToAd",
     adunitPathInterstitial: "networkCode/pathToInterstitial",
     custParams: "category=sport",
@@ -232,7 +232,7 @@ VideoFeedCarrouselViewSUI(
 The `backgroundCarrouselColor` parameter sets the background color of the carousel view (native layer and HTML body). It defaults to transparent:
 
 ```swift
-VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1, backgroundCarrouselColor: UIColor.black)
+VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 0, backgroundCarrouselColor: UIColor.black)
     .frame(maxWidth: .infinity)
     .frame(height: 300)
 ```
@@ -243,7 +243,7 @@ VideoFeedCarrouselViewSUI(mdtk: mdtk, zoneId: 1, backgroundCarrouselColor: UICol
 
 It can be used with a `videoId`, a `zoneId` and a `mdtk`. 
 If no videoId is provided, it will display the first video of the feed.
-If no zoneId is provided, it will use the first zone (id 1).
+If no zoneId is provided, it will use the first zone (id 0).
 
 ```swift
     VideoFeedViewSUI(videoId: videoId, zoneId: zoneId, mdtk: mdtk, onLinkActivated: { url in
